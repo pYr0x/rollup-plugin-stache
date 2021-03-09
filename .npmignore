@@ -1,0 +1,8 @@
+.editorconfig
+.gitignore
+.nvmrc
+node_modules
+.idea
+.npmignore
+examples/
+__test__/

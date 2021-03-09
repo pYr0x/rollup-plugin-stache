@@ -1,0 +1,19 @@
+{
+  "name": "simple",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "dependencies": {
+    "can-stache": "^5.1.1",
+    "can-stache-bindings": "^5.0.4",
+    "can-view-scope": "^4.13.6",
+    "can-view-import": "^5.0.0",
+    "rollup": "^2.40.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "@rollup/plugin-replace": "^2.4.1",
+    "rollup-plugin-stache": "file:../../"
+  }
+}

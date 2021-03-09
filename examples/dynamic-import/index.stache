@@ -1,0 +1,9 @@
+<can-dynamic-import from="./foo.js">
+  loaded!
+</can-dynamic-import>
+
+<can-dynamic-import from="./foo.js" value:to="scope.vars.foo" />
+{{scope.vars.foo.default}}
+
+<can-dynamic-import from="./partial.stache" value:to="scope.vars.partial" />
+{{>scope.vars.partial.default}}
