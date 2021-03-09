@@ -1,7 +1,7 @@
-import {parse} from 'can-stache-ast';
-import path from "path";
+const parse = require('can-stache-ast').parse;
+const path = require("path");
 
-export default function stache() {
+module.exports = function stache() {
   return {
     name: 'stache',
 
@@ -63,6 +63,7 @@ export default function stache() {
         }, {});
 
 
+        var foo = '`${dynamicImportMap[moduleName]}`';
         // language=JavaScript
         var body = `
           import stache from 'can-stache';
@@ -88,7 +89,7 @@ export default function stache() {
               }).join(",")}};
 
               if (moduleName in dynamicImportMap) {
-                return import(dynamicImportMap[moduleName]);
+                return import(/* @vite-ignore */ ${foo});
               }
               return oldRequire.apply(this, arguments);
             };

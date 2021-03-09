@@ -1,13 +1,13 @@
-import StachePlugin from '../../src/index';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import replace from '@rollup/plugin-replace';
+const StachePlugin = require('../../src/index');
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const replace = require('@rollup/plugin-replace');
+const path = require('path');
 import { terser } from "rollup-plugin-terser";
 import cleanup from 'rollup-plugin-cleanup';
 
-import path from 'path';
 
-export default [
+module.exports = [
   {
     input: 'index.js',
     output: {
@@ -25,14 +25,14 @@ export default [
         include: path.join(__dirname, '../../node_modules/**'),
       }),
       StachePlugin(),
-      terser({
-        output: {
-          comments: "all"
-        }
-      }),
-      cleanup({
-        comments: "license"
-      })
+      // terser({
+      //   output: {
+      //     comments: "all"
+      //   }
+      // }),
+      // cleanup({
+      //   comments: "license"
+      // })
     ]
   },
 ]

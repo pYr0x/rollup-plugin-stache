@@ -1,10 +1,10 @@
-import StachePlugin from '../../src/index';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import replace from '@rollup/plugin-replace';
-import path from 'path';
+const StachePlugin = require('../../src/index');
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const replace = require('@rollup/plugin-replace');
+const path = require('path');
 
-export default [
+module.exports = [
   {
     input: 'index.js',
     output: {
