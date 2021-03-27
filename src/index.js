@@ -1,20 +1,10 @@
 const parse = require('can-stache-ast').parse;
+const makeSourceMap = require( "./source-map" );
 const path = require("path");
 
 module.exports = function stache() {
   return {
     name: 'stache',
-
-    async resolveId(id, importer) {
-      const [filename, query] = id.split('?', 2)
-
-      if (filename.endsWith('.stache')) {
-        return await this.resolve(filename, importer, {
-          skipSelf: true,
-        })
-      }
-      return null;
-    },
 
     // load(id) {
     //   var body, map = "";
@@ -63,7 +53,7 @@ module.exports = function stache() {
         }, {});
 
 
-        var foo = '`${dynamicImportMap[moduleName]}`';
+        var dynamicImportMapTemplate = '`${dynamicImportMap[moduleName]}`';
         // language=JavaScript
         var body = `
           import stache from 'can-stache';
@@ -89,7 +79,7 @@ module.exports = function stache() {
               }).join(",")}};
 
               if (moduleName in dynamicImportMap) {
-                return import(/* @vite-ignore */ ${foo});
+                return import(/* @vite-ignore */${dynamicImportMapTemplate});
               }
               return oldRequire.apply(this, arguments);
             };
@@ -115,9 +105,13 @@ module.exports = function stache() {
 
             return renderer(scope, moduleOptions, nodeList);
           };`;
+
+        const sourceMap = makeSourceMap( body, code.trim(), filename )
+
         return {
           code: body,
-          map: {mappings: ''}
+          // map: {mappings: ''}
+          map: sourceMap
         };
       }
       return null;

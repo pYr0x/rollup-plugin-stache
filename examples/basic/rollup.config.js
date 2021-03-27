@@ -1,4 +1,4 @@
-import StachePlugin from 'rollup-plugin-stache';
+const StachePlugin = require('../../src/index');
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from '@rollup/plugin-replace';
@@ -10,7 +10,7 @@ export default [
     output: {
       dir: 'dist',
       format: 'esm',
-      // sourcemap: 'inline',
+      sourcemap: 'inline',
     },
     plugins: [
       replace({
