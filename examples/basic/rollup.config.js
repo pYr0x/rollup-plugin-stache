@@ -1,4 +1,4 @@
-const StachePlugin = require('../../src/index');
+import stachePlugin from 'rollup-plugin-stache';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from '@rollup/plugin-replace';
@@ -21,7 +21,7 @@ export default [
       commonjs({
         include: path.join(__dirname, '../../node_modules/**'),
       }),
-      StachePlugin()
+      ...stachePlugin()
     ]
   },
 ]

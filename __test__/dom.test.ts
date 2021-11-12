@@ -1,6 +1,9 @@
 import {rollup, RollupOutput, RollupWarning} from 'rollup';
 import Path from 'path';
+// import {exec} from 'child_process';
 
+// adds special assertions like toHaveTextContent
+import '@testing-library/jest-dom/extend-expect';
 // var COMMENT_PSEUDO_COMMENT_OR_LT_BANG = new RegExp(
 //   '<!--[\\s\\S]*?(?:-->)?'
 //   + '<!---+>?'  // A comment with no body
@@ -146,10 +149,10 @@ describe('bindings', () => {
 });
 
 async function roll(name: string, entry?: string) {
-  const configFile = `../examples/${name}/rollup.config.js`
-  const configModule = require(configFile)
+  const configFile = `../examples/${name}/rollup.config.cjs`
+  const configModule = await import(configFile);
   const configs = configModule.__esModule ? configModule.default : configModule
-  const config = Array.isArray(configs) ? configs[0] : configs
+  const config = configs[0];
 
   config.input = Path.resolve(__dirname, Path.dirname(configFile), config.input)
   delete config.output

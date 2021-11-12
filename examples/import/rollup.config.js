@@ -1,8 +1,8 @@
-const StachePlugin = require('../../src/index');
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const replace = require('@rollup/plugin-replace');
 const path = require('path');
+const stachePlugin = require('../../src');
 
 module.exports = [
   {
@@ -20,8 +20,8 @@ module.exports = [
       resolve(),
       commonjs({
         include: path.join(__dirname, '../../node_modules/**'),
-      }),
-      StachePlugin()
+      })
+        .concat(stachePlugin())
     ]
   },
 ]

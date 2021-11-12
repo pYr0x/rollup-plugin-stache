@@ -1,8 +1,8 @@
-import StachePlugin from 'rollup-plugin-stache';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from '@rollup/plugin-replace';
 import path from 'path';
+import stachePlugin from '../../src/index';
 
 export default [
   {
@@ -20,8 +20,7 @@ export default [
       resolve(),
       commonjs({
         include: path.join(__dirname, '../../node_modules/**'),
-      }),
-      StachePlugin()
-    ]
+      })]
+      .concat(stachePlugin())
   },
 ]

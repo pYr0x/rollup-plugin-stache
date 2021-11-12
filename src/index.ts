@@ -1,29 +1,22 @@
-const parse = require('can-stache-ast').parse;
-const makeSourceMap = require( "./source-map" );
-const path = require("path");
+// @ts-ignore
+import {parse} from 'can-stache-ast';
+// import makeSourceMap from "./source-map";
+import path from "path";
 
-module.exports = function stache() {
+export const stachePlugin = function() {
   return {
     name: 'stache',
 
-    // load(id) {
-    //   var body, map = "";
-    //   return {
-    //     code: body,
-    //     map: { mappings: '' }
-    //   };
-    // },
-
-    transform(code, id) {
-      const [filename, query] = id.split('?', 2)
+    transform(code:string, id: string) {
+      const [filename] = id.split('?', 2)
 
       if (filename.endsWith('.stache')) {
 
         const ast = parse(id, code.trim());
         const intermediate = JSON.stringify(ast.intermediate);
 
-        let tagImportMap = [];
-        let simpleImports = [];
+        let tagImportMap: string[] = [];
+        let simpleImports: string[] = [];
 
         const staticImports = [...new Set(ast.imports)];
         staticImports.forEach((file) => {
@@ -41,19 +34,18 @@ module.exports = function stache() {
         });
 
         const filePath = path.dirname(filename);
-        //const currentDir = path.relative(__dirname, filePath);
 
-        const dynamicImportMap = ast.dynamicImports.reduce((map, name, index) => {
+        const dynamicImportMap = ast.dynamicImports.reduce((map: { [file: string]: string; }, name: string) => {
+          // @ts-ignore
           const referenceId = this.emitFile({
             type: 'chunk',
-            id: path.resolve(filePath,name)
+            id: path.resolve(filePath, name)
           });
           map[name] = 'import.meta.ROLLUP_FILE_URL_'+referenceId;
           return map;
         }, {});
 
 
-        var dynamicImportMapTemplate = '`${dynamicImportMap[moduleName]}`';
         // language=JavaScript
         var body = `
           import stache from 'can-stache';
@@ -61,6 +53,7 @@ module.exports = function stache() {
           import 'can-view-import';
           import 'can-stache/src/mustache_core';
           import stacheBindings from 'can-stache-bindings';
+          ${Object.keys(dynamicImportMap).length ? `import importer from 'rollup-stache-import-module';`: ``}
 
           ${tagImportMap.map((file, i) => `import * as i_${i} from '${file}';`).join('\n')}
           ${simpleImports.map((file) => `import '${file}';`)}
@@ -69,22 +62,11 @@ module.exports = function stache() {
           var renderer = stache(${intermediate});
 
           ${Object.keys(dynamicImportMap).length ? `
-          window.require = window.require || new Function('return false');
-          (function () {
-            const oldPrototype = window.require.prototype;
-            const oldRequire = window.require;
-            window.require = async function (moduleName) {
-              const dynamicImportMap = {${Object.keys(dynamicImportMap).map((a) => {
-                return `"${a}": ${dynamicImportMap[a]}`;
-              }).join(",")}};
-
-              if (moduleName in dynamicImportMap) {
-                return import(/* @vite-ignore */${dynamicImportMapTemplate});
-              }
-              return oldRequire.apply(this, arguments);
-            };
-            window.require.prototype = oldPrototype;
-          })();`: ``}
+          const dynamicImportMap = {${Object.keys(dynamicImportMap).map((file) => {
+            return `"${file}": ${dynamicImportMap[file]}`;
+          }).join(",")}};
+          importer(dynamicImportMap);
+          `: ``}
 
           export default function (scope, options, nodeList) {
             if (!(scope instanceof Scope)) {
@@ -106,18 +88,67 @@ module.exports = function stache() {
             return renderer(scope, moduleOptions, nodeList);
           };`;
 
-        const sourceMap = makeSourceMap( body, code.trim(), filename )
+        // const sourceMap = makeSourceMap( body, code.trim(), filename )
 
         return {
           code: body,
-          // map: {mappings: ''}
-          map: sourceMap
+          map: { mappings: '' }
+          // map: sourceMap
         };
       }
       return null;
     },
-    resolveFileUrl({fileName}) {
+    resolveFileUrl({fileName}: {fileName: string}) {
       return `"./${fileName}"`;
     }
   }
+}
+
+export const stacheImportPlugin = function(){
+  return {
+    resolveId ( source:String ) {
+      if (source === 'rollup-stache-import-module') {
+        return source;
+      }
+      return null;
+    },
+    load(id: string) {
+      if (id === 'rollup-stache-import-module') {
+        // language=JavaScript
+        const body = `
+          import {flushLoader, addLoader} from 'can-import-module';
+          import viewCallbacks from 'can-view-callbacks';
+
+          flushLoader();
+
+          const tag = viewCallbacks.tag;
+
+          // noop static import since we handled it in the stache plugin
+          tag('can-import', function () {});
+
+          export default function (dynamicImportMap) {
+            addLoader((moduleName) => {
+              if (!(moduleName.match(/[^\\\\\\\/]\\.([^.\\\\\\\/]+)$/) || [null]).pop()) {
+                moduleName += '.js';
+              }
+              if (moduleName in dynamicImportMap) {
+                return import(/* @vite-ignore */dynamicImportMap[moduleName]);
+              }
+            });
+          };`
+
+        return {
+          code: body,
+          map: { mappings: '' }
+        };
+      }
+    }
+  }
+}
+
+export default function(){
+  return [
+    stacheImportPlugin(),
+    stachePlugin()
+  ]
 }

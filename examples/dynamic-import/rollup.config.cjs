@@ -1,11 +1,8 @@
-const stachePlugin = require('../../src/index');
+const stachePlugin = require('rollup-plugin-stache').default;
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const replace = require('@rollup/plugin-replace');
 const path = require('path');
-import { terser } from "rollup-plugin-terser";
-import cleanup from 'rollup-plugin-cleanup';
-
 
 module.exports = [
   {
@@ -23,15 +20,8 @@ module.exports = [
       resolve({ browser:true, preferBuiltins: true }),
       commonjs({
         include: path.join(__dirname, '../../node_modules/**'),
-      })].concat(stachePlugin())
-      // terser({
-      //   output: {
-      //     comments: "all"
-      //   }
-      // }),
-      // cleanup({
-      //   comments: "license"
-      // })
-
+      }),
+      ...stachePlugin()
+    ]
   },
 ]

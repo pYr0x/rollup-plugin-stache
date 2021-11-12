@@ -1,4 +1,4 @@
-import StachePlugin from 'rollup-plugin-stache';
+import stachePlugin from 'rollup-plugin-stache';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from '@rollup/plugin-replace';
@@ -15,13 +15,13 @@ export default [
     plugins: [
       replace({
         preventAssignment: true,
-        'process.env.NODE_ENV': JSON.stringify( 'production')
+        'process.env.NODE_ENV': JSON.stringify('production')
       }),
       resolve(),
       commonjs({
         include: path.join(__dirname, '../../node_modules/**'),
       }),
-      StachePlugin()
+      ...stachePlugin()
     ]
   },
 ]

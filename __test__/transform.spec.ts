@@ -1,4 +1,5 @@
-import plugin from '../src/index';
+// @ts-ignore
+import {stachePlugin} from 'rollup-plugin-stache';
 // @ts-ignore
 import {parse} from 'can-stache-ast';
 
@@ -8,7 +9,7 @@ describe('Rollup Plugin Stache', () => {
     let transform: any;
 
     beforeEach(() => {
-      transform = plugin().transform;
+      transform = stachePlugin().transform;
     })
 
     it('produces the right intermediate', async () => {

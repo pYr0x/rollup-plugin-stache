@@ -139,7 +139,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "jest-environment-jsdom",
+  testEnvironment: "jest-environment-jsdom",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -178,11 +178,15 @@ module.exports = {
     '^.+\\.(ts|js)$': 'ts-jest',
   },
 
+  "extensionsToTreatAsEsm": [".ts"],
+
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
+  transformIgnorePatterns: [
+    // '^.+\\.js$'
   //   "\\\\node_modules\\\\",
   //   "\\.pnp\\.[^\\\\]+$"
-  // ],
+    "node_modules/(?!(rollup-plugin-stache)/)",
+  ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
