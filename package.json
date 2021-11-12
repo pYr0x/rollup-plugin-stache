@@ -12,7 +12,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "tsc -w -p .",
-    "test": "jest",
+    "test": "npm run build && jest",
     "test:unit": "jest",
     "test:e2e": "jest --testMatch '**/*.e2e.ts'"
   },
