@@ -1,4 +1,4 @@
-const stachePlugin = require('../../src/index');
+const stachePlugin = require('rollup-plugin-stache');
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const replace = require('@rollup/plugin-replace');
