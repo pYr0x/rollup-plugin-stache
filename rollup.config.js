@@ -8,7 +8,7 @@ const external = ['path', 'fs', 'typescript', ...Object.keys(pkg.dependencies), 
 export default {
   input: 'src/index.ts',
   plugins: [
-    typescript({ sourceMap: false }),
+    typescript({ sourceMap: false, tsconfig: './tsconfig.json' }),
     commonjs()
   ],
   external,

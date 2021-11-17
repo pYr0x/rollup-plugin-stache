@@ -1,0 +1,43 @@
+<div id="test"></div>
+<script type="module" data-info="https://stackoverflow.com/a/43834063">
+  let l, e, t = 'script',
+    p = /(from\s+|import\s*\(?)['"](#[\w\-]+)['"]/g,
+    x = 'textContent',
+    d = document,
+    s, o;
+  for (o of d.querySelectorAll(t + '[type=inline-module]')){
+    l = d.createElement(t);
+    o.id ? l.id = o.id : 0;
+    // l.type = 'module';
+    l[x] = o[x].replace(p, (u, a, z) => (e = d.querySelector(t + z + '[type=inline-module][src]')) ? a + `/* ${z} */'${e.src}'` : u)
+    l.src = URL.createObjectURL(new Blob([l[x]], {
+      type: 'application/java' + t
+    }));
+    o.replaceWith(l);
+  }
+
+  // const scripts = {};
+  //
+  // d.querySelectorAll(t + '[type=inline-module]').forEach(element => {
+  //   scripts[element.id] = element.src;
+  // });
+  //
+  // for (const element of d.querySelectorAll(t + '[type=inline-module]')){
+  //   const n = element.cloneNode(true);
+  //   n[x] = element[x];
+  //   // iterate through object scripts and get key and value
+  //   for (const [key, value] of Object.entries(scripts)) {
+  //     n[x] = n[x].replace('#' + key + '#', value);
+  //   }
+  //   n.src = URL.createObjectURL(new Blob([n[x]], {
+  //     type: 'application/java' + t
+  //   }));
+  //   element.replaceWith(n);
+  // }
+  //
+  // for (o of d.querySelectorAll(t + '[type=inline-module]')){
+  //   const n = o.cloneNode(true);
+  //   n.type = 'module';
+  //   o.replaceWith(n);
+  // }
+</script>

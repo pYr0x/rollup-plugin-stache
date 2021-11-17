@@ -2,8 +2,9 @@
 import {parse} from 'can-stache-ast';
 // import makeSourceMap from "./source-map";
 import path from "path";
+import { Plugin } from 'rollup';
 
-export const stachePlugin = function() {
+export const stachePlugin = function(): Plugin {
   return {
     name: 'stache',
 
@@ -36,6 +37,9 @@ export const stachePlugin = function() {
         const filePath = path.dirname(filename);
 
         const dynamicImportMap = ast.dynamicImports.reduce((map: { [file: string]: string; }, name: string) => {
+          if(!path.extname(name)){
+            name += '.js';
+          }
           // @ts-ignore
           const referenceId = this.emitFile({
             type: 'chunk',
@@ -63,6 +67,9 @@ export const stachePlugin = function() {
 
           ${Object.keys(dynamicImportMap).length ? `
           const dynamicImportMap = {${Object.keys(dynamicImportMap).map((file) => {
+            if(!path.extname(file)){
+              file += '.js';
+            }
             return `"${file}": ${dynamicImportMap[file]}`;
           }).join(",")}};
           importer(dynamicImportMap);
@@ -104,9 +111,10 @@ export const stachePlugin = function() {
   }
 }
 
-export const stacheImportPlugin = function(){
+export const stacheImportPlugin = function(): Plugin{
   return {
-    resolveId ( source:String ) {
+    name: "stache-import-module",
+    resolveId ( source ) {
       if (source === 'rollup-stache-import-module') {
         return source;
       }
