@@ -11,7 +11,7 @@
     "require": "./dist/cjs/index.js"
   },
   "scripts": {
-    "start": "http-server",
+    "start": "serve -p 8081",
     "build": "rollup -c",
     "dev": "tsc -w -p .",
     "test": "npm run build && jest",
@@ -56,6 +56,6 @@
     "ts-jest": "^27.0.7",
     "tslib": "^2.3.1",
     "typescript": "^4.4.4",
-    "http-server": "^14.0.0"
+    "serve": "^13.0.2"
   }
 }

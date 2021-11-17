@@ -5,9 +5,8 @@ module.exports = {
     product: 'chrome',
   },
   browserContext: 'default',
-  server: {
-    command: 'npm run start',
-    port: 8081,
-    launchTimeout: 100000
-  },
+  // server: {
+  //   command: 'npm run start',
+  //   launchTimeout: 100000
+  // },
 }

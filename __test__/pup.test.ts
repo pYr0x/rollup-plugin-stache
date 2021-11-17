@@ -25,7 +25,7 @@ describe('dynamic import', () => {
     deleteMatchedFiles(path.resolve(__dirname, '../examples/dynamic-import/dist/'), /bar-.*/);
 
     // @ts-ignore
-    await page.goto('http://127.0.0.1:8081/examples/dynamic-import/index.html')
+    await page.goto('http://localhost:8081/examples/dynamic-import/')
   })
 
   it('resolves foo.js to scope.vars.foo', async () => {
