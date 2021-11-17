@@ -8,8 +8,6 @@ import "pptr-testing-library/extend";
 import {getDocument, queries, getQueriesForElement} from "pptr-testing-library";
 import '@testing-library/jest-dom'
 // import {findByTestId} from "@testing-library/dom";
-
-
 import {deleteMatchedFiles, writeBundle} from "./util";
 import path from "path";
 
@@ -17,8 +15,7 @@ jest.setTimeout(100000)
 
 
 
-
-describe('dynamic import', () => {
+describe.skip('dynamic import', () => {
   beforeAll(async () => {
     await writeBundle('dynamic-import');
 
@@ -57,6 +54,12 @@ describe('import', () => {
   beforeEach( () => {
   })
   afterEach(() => {
+  })
+
+  it('import by can-import', async () => {
+    // @ts-ignore
+    const importedModule = await page.evaluate(() => window.IMPORT_MODULE)
+    expect(importedModule).toEqual("module imported before render view");
   })
 
   it('import into local scope', async () => {

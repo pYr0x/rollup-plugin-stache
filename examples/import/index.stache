@@ -2,4 +2,4 @@
 <can-import from="./upperCase.js" module.upperCase:to="upper"/>
 <can-import from="./foo" module.default:to="world"/>
 <can-import from="./foo" module.default:to="bar"/>
-lala {{upper("hello")}} {{world}}}
+{{upper("hello")}} {{world}}}

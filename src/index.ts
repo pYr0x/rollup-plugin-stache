@@ -138,7 +138,7 @@ export const stacheImportPlugin = function(): Plugin{
 
           export function staticImporter(staticImportMap){
             addLoader((moduleName) => {
-              if (staticImportMap.indexOf(moduleName) === -1) {
+              if (staticImportMap.indexOf(moduleName) !== -1) {
                 return Promise.resolve();
               }
             });

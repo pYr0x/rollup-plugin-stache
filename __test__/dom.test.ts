@@ -45,28 +45,6 @@ describe('partial', () => {
   })
 });
 
-describe('import', () => {
-  let result!: RollupOutput
-  beforeAll(async () => {
-    result = await generateBundle('import')
-    document.body.innerHTML = `<div id="test"></div>`;
-    injectScript(result.output[0].code);
-  })
-  beforeEach( () => {
-  })
-  afterEach(() => {
-  })
-
-  it('import by can-import', () => {
-    // @ts-ignore
-    expect(window.IMPORT_MODULE).toEqual("module imported before render view");
-  })
-  it('import into local scope', () => {
-    const text = getInnerText(document.querySelector('#test'));
-    expect(text.trim()).toEqual("HELLO world");
-  })
-});
-
 describe('bindings', () => {
   let result!: RollupOutput
   beforeAll(async () => {
