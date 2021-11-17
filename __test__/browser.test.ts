@@ -47,3 +47,21 @@ describe('dynamic import', () => {
     expect(await queries.findByText($doc, /Failed to fetch dynamically imported module/)).toBeTruthy()
   })
 })
+
+describe('import', () => {
+  beforeAll(async () => {
+    await writeBundle('import');
+    // @ts-ignore
+    await page.goto('http://localhost:8081/examples/import/')
+  })
+  beforeEach( () => {
+  })
+  afterEach(() => {
+  })
+
+  it('import into local scope', async () => {
+    // @ts-ignore
+    const $doc = await getDocument(page);
+    expect(await queries.findByText($doc, /HELLO world/)).toBeTruthy()
+  })
+});

@@ -57,10 +57,18 @@ export const stachePlugin = function(): Plugin {
           import 'can-view-import';
           import 'can-stache/src/mustache_core';
           import stacheBindings from 'can-stache-bindings';
-          ${Object.keys(dynamicImportMap).length ? `import importer from 'rollup-stache-import-module';`: ``}
+
+          ${(Object.keys(dynamicImportMap).length || tagImportMap.length || simpleImports.length) ? `import {staticImporter, dynamicImporter} from 'rollup-stache-import-module';`: ``}
 
           ${tagImportMap.map((file, i) => `import * as i_${i} from '${file}';`).join('\n')}
           ${simpleImports.map((file) => `import '${file}';`)}
+
+          ${tagImportMap.length || simpleImports.length? `
+          const staticImportMap = [${[...tagImportMap, ...simpleImports].map((file) => {
+            return `"${file}"`;
+          }).join(",")}];
+          staticImporter(staticImportMap);
+          `: ``}
 
           stache.addBindings(stacheBindings);
           var renderer = stache(${intermediate});
@@ -72,7 +80,7 @@ export const stachePlugin = function(): Plugin {
             }
             return `"${file}": ${dynamicImportMap[file]}`;
           }).join(",")}};
-          importer(dynamicImportMap);
+          dynamicImporter(dynamicImportMap);
           `: ``}
 
           export default function (scope, options, nodeList) {
@@ -125,16 +133,18 @@ export const stacheImportPlugin = function(): Plugin{
         // language=JavaScript
         const body = `
           import {flushLoader, addLoader} from 'can-import-module';
-          import viewCallbacks from 'can-view-callbacks';
 
           flushLoader();
 
-          const tag = viewCallbacks.tag;
+          export function staticImporter(staticImportMap){
+            addLoader((moduleName) => {
+              if (staticImportMap.indexOf(moduleName) === -1) {
+                return Promise.resolve();
+              }
+            });
+          }
 
-          // noop static import since we handled it in the stache plugin
-          tag('can-import', function () {});
-
-          export default function (dynamicImportMap) {
+          export function dynamicImporter(dynamicImportMap) {
             addLoader((moduleName) => {
               if (!(moduleName.match(/[^\\\\\\\/]\\.([^.\\\\\\\/]+)$/) || [null]).pop()) {
                 moduleName += '.js';
@@ -143,7 +153,7 @@ export const stacheImportPlugin = function(): Plugin{
                 return import(/* @vite-ignore */dynamicImportMap[moduleName]);
               }
             });
-          };`
+          }`
 
         return {
           code: body,
