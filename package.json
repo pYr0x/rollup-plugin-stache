@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-stache",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "type": "commonjs",
   "main": "dist/cjs/index.js",
@@ -17,7 +17,12 @@
     "test": "npm run build && jest --coverage",
     "test:pupp": "jest --env=puppeteer --coverage -- __test__/browser.test.ts",
     "test:unit": "jest",
-    "test:e2e": "jest --testMatch '**/*.e2e.ts'"
+    "test:e2e": "jest --testMatch '**/*.e2e.ts'",
+    "prepare": "npm run build",
+    "prepublishOnly": "",
+    "preversion": "",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [],
   "author": "",
