@@ -15,7 +15,7 @@ jest.setTimeout(100000)
 
 
 
-describe.skip('dynamic import', () => {
+describe('dynamic import', () => {
   beforeAll(async () => {
     await writeBundle('dynamic-import');
 
