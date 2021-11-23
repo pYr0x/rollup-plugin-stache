@@ -1,7 +1,7 @@
 import stache from "can-stache";
 
-const template = /*stache*/`<h1>Hello {{message}}</h1>`;
-window.TEMPLATE = template;
+const template1 = /*stache*/`<h1>Hello {{message}}</h1>`;
+window.TEMPLATE = template1;
 const view = stache(window.TEMPLATE);
 document.querySelector('#test').appendChild(view({message: "inline"}));
 
