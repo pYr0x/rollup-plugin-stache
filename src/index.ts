@@ -3,6 +3,8 @@ import {parse} from 'can-stache-ast';
 // import makeSourceMap from "./source-map";
 import path from "path";
 import { Plugin } from 'rollup';
+import stacheTransformer from "stache-inline-transformer";
+import whichModules from "stache-inline-transformer/dist/transformer/modules";
 
 export const stachePlugin = function(): Plugin {
   return {
@@ -164,9 +166,30 @@ export const stacheImportPlugin = function(): Plugin{
   }
 }
 
+export const stacheInlinePlugin = function (): Plugin {
+  return {
+    name: 'stache-inline',
+
+    transform(code: string, id: string) {
+      const [filename] = id.split('?', 2)
+
+      if (filename.endsWith('.js') && /node_modules/.exec(id) === null) {
+        if (whichModules(code).length > 0) {
+          const newCode = stacheTransformer(code);
+          return {
+            code: newCode,
+            map: {mappings: ''}
+          };
+        }
+      }
+    }
+  }
+}
+
 export default function(){
   return [
     stacheImportPlugin(),
-    stachePlugin()
+    stachePlugin(),
+    stacheInlinePlugin()
   ]
 }

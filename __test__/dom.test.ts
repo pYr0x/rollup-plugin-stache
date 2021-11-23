@@ -64,48 +64,19 @@ describe('bindings', () => {
 
 });
 
-// async function roll(name: string) {
-//   const config = getConfig();
-//   config.input = Path.resolve(__dirname, `../examples/${name}`, <string>config.input);
-//   config.output = {
-//     dir: Path.resolve(__dirname, `../examples/${name}/dist`),
-//     format: 'esm',
-//     inlineDynamicImports: false
-//   };
-//   // delete config.output
-//
-//   // @ts-ignore
-//   config.onwarn = function (warning: RollupWarning, warn: Function) {
-//     switch (warning.code) {
-//       case 'UNUSED_EXTERNAL_IMPORT':
-//         return
-//       default:
-//         warning.message = `(${name}) ${warning.message}`
-//         warn(warning)
-//     }
-//   }
-//
-//   const bundle = await rollup(config)
-//   // await bundle.write(config.output);
-//   return bundle.generate({ format: 'esm', inlineDynamicImports: false })
-//
-// }
-//
-// function getConfig(): RollupOptions {
-//   return {
-//     input: 'index.js',
-//     output: {
-//       dir: 'dist',
-//       format: 'esm',
-//     },
-//     plugins: [
-//       replace({
-//         preventAssignment: true,
-//         'process.env.NODE_ENV': JSON.stringify( 'production')
-//       }),
-//       nodeResolve(),
-//       commonjs(),
-//       ...stachePlugin()
-//     ]
-//   }
-// }
+describe('inline stache', () => {
+  let result!: RollupOutput
+  beforeAll(async () => {
+    result = await generateBundle('inline-stache')
+    document.body.innerHTML = `<div id="test"></div>`;
+    injectScript(result.output[0].code);
+  })
+  beforeEach( () => {
+  })
+  afterEach(() => {
+  })
+
+  it('should create an stache array expression', () => {
+    expect(result.output[0].code).not.toContain("<h1>Hello {{message}}</h1>")
+  })
+})

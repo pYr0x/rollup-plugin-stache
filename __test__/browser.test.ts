@@ -68,3 +68,53 @@ describe('import', () => {
     expect(await queries.findByText($doc, /HELLO world/)).toBeTruthy()
   })
 });
+
+describe('inline stache', () => {
+  beforeAll(async () => {
+    await writeBundle('inline-stache');
+    // @ts-ignore
+    await page.goto('http://localhost:8081/examples/inline-stache/')
+  })
+  beforeEach( () => {
+  })
+  afterEach(() => {
+  })
+
+  it('should render inline stache', async () => {
+    // @ts-ignore
+    const template = await page.evaluate(() => window.TEMPLATE)
+    expect(template).not.toEqual(`<h1>Hello {{message}}</h1>`);
+    // @ts-ignore
+    const $doc = await getDocument(page);
+    expect(await queries.findByText($doc, /Hello inline/)).toBeTruthy()
+    expect(await queries.findByText($doc, /Hey stache call expression/)).toBeTruthy()
+  })
+})
+
+describe('stache element', () => {
+  beforeAll(async () => {
+    await writeBundle('stache-element');
+    // @ts-ignore
+    await page.goto('http://localhost:8081/examples/stache-element/')
+  })
+  beforeEach( () => {
+  })
+  afterEach(() => {
+  })
+
+  it('should render the counter component', async () => {
+    // @ts-ignore
+    const $doc = await getDocument(page);
+    expect(await queries.findByText($doc, /Count:/)).toBeTruthy()
+  })
+  it('add +1 by clicking the button', async () => {
+    // press button and check counter to be 1
+    // @ts-ignore
+    const $doc = await getDocument(page);
+    const button = await queries.findByRole($doc, 'button');
+    await button.click();
+    const span = await queries.findByTestId($doc, "counter");
+    expect(await span.evaluate( el => el.textContent)).toEqual("1");
+
+  })
+})

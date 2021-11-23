@@ -1,0 +1,20 @@
+{
+  "name": "inline-stache",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "dependencies": {
+    "can-stache": "^5.1.1",
+    "can-stache-bindings": "^5.0.5",
+    "can-view-scope": "^4.13.6",
+    "can-view-import": "^5.0.1",
+    "rollup": "^2.55.1",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-replace": "^3.0.0",
+    "rollup-plugin-stache": "file:../../"
+  }
+}
